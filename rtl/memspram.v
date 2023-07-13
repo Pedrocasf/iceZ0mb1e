@@ -24,7 +24,7 @@
 //
 
 module memspram #(
-    parameter ADDR_WIDTH = 14
+    parameter ADDR_WIDTH = 15
 ) (
     input clk,
     input reset_n,
@@ -38,19 +38,21 @@ module memspram #(
 
     wire read_sel = !cs_n & !rd_n & wr_n;
     wire write_sel = !cs_n & rd_n & !wr_n;
-
+	wire [15:0] spram_d;
 	wire [15:0] spram_q;
-	assign data_out = (read_sel) ? spram_q[7:0] : 8'b0;
-
+	wire [3:0] mask_w;
+	assign data_out = (read_sel) ? addr[0]==1'b1 ? spram_q[15:8] : spram_q[7:0] : 8'b0;
+	assign spram_d = (addr[0]==1'b1)?{data_in, 8'b0}:{8'b0, data_in};
+	assign mask_w = (addr[0]==1'b1)?4'b1100:4'b0011;
 	//SB_SPRAM256KA.ADDRESS is 14bit:
-	wire [13:0] addr_sp;
-	assign addr_sp = addr;
+	wire [ADDR_WIDTH-2:0] addr_sp;
+	assign addr_sp = addr[ADDR_WIDTH-1:1];
 
 	SB_SPRAM256KA ram0
 	(
 		.ADDRESS(addr_sp),
-		.DATAIN({8'b0, data_in}),
-		.MASKWREN(4'b0011),
+		.DATAIN(spram_d),
+		.MASKWREN(mask_w),
 		.WREN(write_sel),
 		.CHIPSELECT(1'b1),
 		.CLOCK(clk),
