@@ -24,8 +24,8 @@
 //
 
 module iceZ0mb1e  #(
-	parameter RAM_TYPE = 0,
-	parameter RAM_WIDTH = 13,
+	parameter RAM_TYPE = 1,
+	parameter RAM_WIDTH = 15,
 	parameter ROM_WIDTH = 13,
 	parameter RAM_LOC = 16'h8000
 ) (
@@ -130,9 +130,9 @@ module iceZ0mb1e  #(
 		.busrq_n	(busrq_n),
 		.data_in	(data_miso)
 	);
-	defparam cpu.Mode = 0; // 0 => Z80, 1 => Fast Z80, 2 => 8080, 3 => GB
+	defparam cpu.Mode = 1; // 0 => Z80, 1 => Fast Z80, 2 => 8080, 3 => GB
 	defparam cpu.T2Write = 1; // 0 => wr_n active in T3, /=0 => wr_n active in T2
-	defparam cpu.IOWait = 1; // 0 => Single cycle I/O, 1 => Std I/O cycle
+	defparam cpu.IOWait = 0; // 0 => Single cycle I/O, 1 => Std I/O cycle
 
 	membram #(ROM_WIDTH, `__def_fw_img, 1) rom
 	(

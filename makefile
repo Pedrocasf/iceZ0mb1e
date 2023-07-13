@@ -87,7 +87,11 @@ else ifeq ($(TARGET),tinybx)
 	PNRFLAGS = --hx8k --package cm81
 	ICETIMEFLAGS = -d hx8k
 	FPGA_PINMAP = ./pinmap/tinybx.pcf
-else
+else ifeq ($(TARGET),icesugar)
+	SRC += ./top/icesugar.v
+	PNRFLAGS = --up5k --package sg48
+	ICETIMEFLAGS = -d up5k
+	FPGA_PINMAP = ./pinmap/icesugar.pcf
 endif
 
 ###############################################################################
